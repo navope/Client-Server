@@ -28,6 +28,7 @@ return sock;
 
 
 int main(){
+    int voltage = 0;
     using namespace std;
     setlocale(LC_ALL, "rus");
     modbus package;
@@ -53,8 +54,8 @@ int main(){
                     printf("Message from server: %s\n", package.data);
                     else
                     printf("Server is not working\n");
-                system("pause");
-                system ("cls");
+                //system("pause");
+                //system ("cls");
                 // Закрываем сокет
                 closesocket(sock);
             }
@@ -62,16 +63,11 @@ int main(){
         case 2:
             {
                 package.function_code = 66;//код функции
-                printf("Введите ваше имя \n");
-                //scanf("%s", &package.data);
-                cin.clear();
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                cin.getline(package.data, sizeof(package.data));
                 SendingModbusPackets(bytes, &package, sock);
                 // Выводим полученные данные
                 printf("Message from server: %s\n", package.data);
-                system("pause");
-                system ("cls");
+               // system("pause");
+                //system ("cls");
                 // Закрываем сокет
                 closesocket(sock);
             }
@@ -79,13 +75,11 @@ int main(){
         case 3:
             {
                 package.function_code = 67;//код функции
-                printf("Введите число \n");
-                scanf("%s", &package.data);
                 SendingModbusPackets(bytes, &package, sock);
                 // Выводим полученные данные
                 printf("Message from server: %s\n", package.data);
-                system("pause");
-                system ("cls");
+                //system("pause");
+                //system ("cls");
                 // Закрываем сокет
                 closesocket(sock);
             }
@@ -93,13 +87,12 @@ int main(){
         case 4:
             {
                 package.function_code = 68;//код функции
-                printf("Введите число \n");
-                scanf("%s", &package.data);
                 SendingModbusPackets(bytes, &package, sock);
                 // Выводим полученные данные
+
                 printf("Message from server: %s\n", package.data);
-                system("pause");
-                system ("cls");
+                //system("pause");
+                //system ("cls");
                 // Закрываем сокет
                 closesocket(sock);
             }

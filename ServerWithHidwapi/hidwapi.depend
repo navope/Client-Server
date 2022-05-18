@@ -304,3 +304,15 @@
 1644074660 d:\kursach\serverwithhidwapi\hidapi_hidpi.h
 	<hidpi.h>
 
+1652885412 source:d:\kursach\serverwithhidwapi\main.cpp
+	<windows.h>
+	<stdlib.h>
+	<stdio.h>
+	<stdlib.h>
+	"hidapi.h"
+	<stdint.h>
+	<locale.h>
+	<string.h>
+	<wchar.h>
+	<winsock2.h>
+
