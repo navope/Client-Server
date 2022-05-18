@@ -6,8 +6,6 @@
 #include <limits>
 
 
-//hello semen
-
 struct modbus{
 unsigned short transaction_id=0,protocol_id =0, length;
 unsigned char unit_id=0;
@@ -90,20 +88,21 @@ int main(){
             {
                 package.function_code = 68;//код функции
                 SendingModbusPackets(bytes, &package, sock);
-                //if (strcmp(package.data, ""))
-                    //printf("Message from server: %d\n", package.data);
-                    //else
-                    //printf("Server is not working\n");
-                   memcpy(voltage.elem16,package.data,2);
-                   int rez = voltage.elem10;
-                    printf("Message from server: %d\n", rez);
+                if (strcmp(package.data, ""))
+                    {
+                       memcpy(voltage.elem16,package.data,2);
+                       int rez = voltage.elem10;
+                       printf("Message from server: %d\n", rez);
+                    }
+                    else
+                    printf("Server is not working\n");
                 closesocket(sock);// Закрываем сокет
             }
         break;
         }
         }while (menu!=5);
 
-         // Прекращаем использование DLL
+    // Прекращаем использование DLL
     WSACleanup();
     system("pause");
     return 0;
