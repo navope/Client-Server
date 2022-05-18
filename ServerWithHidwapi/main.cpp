@@ -31,46 +31,7 @@ void MakeMinimumBrightness(hid_device *handle, unsigned char *buf , modbus* pack
 void PaintOverTheScreen(hid_device *handle, unsigned char *buf , modbus* package , char * mas);
 void MeasureVoltageAndChangeRGB(hid_device *handle, unsigned char *buf, union_type * diod_color, int res, modbus* package , char * mas);
 
-int main(int argc, char* argv[])
-{
-	//объявляем пакет модбас
-	modbus package;
-    char bytes[sizeof(modbus)];
-
- // Инициализируем DLL
-    WSADATA wsaData;
-    WSAStartup( MAKEWORD(2, 2), &wsaData);
-
- // Создаем сокет
-    SOCKET servSock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
-
- // Привязываем сокет
-    sockaddr_in sockAddr;
-	memset (& sockAddr, 0, sizeof (sockAddr)); // Каждый байт заполняется 0
-	sockAddr.sin_family = PF_INET; // Использовать IPv4-адрес
-	sockAddr.sin_addr.s_addr = inet_addr ("127.0.0.1"); // Определенный IP-адрес (в вузе 0.0.0.0)
-	sockAddr.sin_port = htons (502); // Порт
-    bind(servSock, (SOCKADDR*)&sockAddr, sizeof(SOCKADDR));
-
- // Входим в состояние мониторинга
-    listen(servSock, 20);
-
- // Получение клиентского запроса
-    SOCKADDR clntAddr;
-    int nSize;
-    SOCKET clntSock;
-
-    (void)argc;
-    (void)argv;
-
-	int res;
-	unsigned char buf[255];
-	#define MAX_STR 255
-	wchar_t wstr[MAX_STR];
-	hid_device *handle;
-	int i;
-
-    union_type diod_color;
+int all_hid_info(){
 
 	struct hid_device_info *devs, *cur_dev;
 
@@ -101,6 +62,85 @@ int main(int argc, char* argv[])
 	}
 	hid_free_enumeration(devs);
 
+}
+
+int open_hid_info(hid_device *handle, int* res){
+    wchar_t wstr[MAX_STR];
+	// Read the Manufacturer String
+	wstr[0] = 0x0000;
+	*res = hid_get_manufacturer_string(handle, wstr, MAX_STR);
+	if (*res < 0)
+		printf("Unable to read manufacturer string\n");
+	printf("Manufacturer String: %ls\n", wstr);
+
+	// Read the Product String
+	wstr[0] = 0x0000;
+	*res = hid_get_product_string(handle, wstr, MAX_STR);
+	if (*res < 0)
+		printf("Unable to read product string\n");
+	printf("Product String: %ls\n", wstr);
+
+	// Read the Serial Number String
+	wstr[0] = 0x0000;
+	*res = hid_get_serial_number_string(handle, wstr, MAX_STR);
+	if (res < 0)
+		printf("Unable to read serial number string\n");
+	printf("Serial Number String: (%d) %ls", wstr[0], wstr);
+	printf("\n");
+
+	// Read Indexed String 1
+	wstr[0] = 0x0000;
+	*res = hid_get_indexed_string(handle, 1, wstr, MAX_STR);
+	if (*res < 0)
+		printf("Unable to read indexed string 1\n");
+	printf("Indexed String 1: %ls\n", wstr);
+	return 0;
+}
+
+int main(int argc, char* argv[])
+{
+    //объявляем пакет модбас
+	modbus package;
+    char bytes[sizeof(modbus)];
+ // Инициализируем DLL
+    WSADATA wsaData;
+    WSAStartup( MAKEWORD(2, 2), &wsaData);
+
+ // Создаем сокет
+    SOCKET servSock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
+
+ // Привязываем сокет
+    sockaddr_in sockAddr;
+	memset (& sockAddr, 0, sizeof (sockAddr)); // Каждый байт заполняется 0
+	sockAddr.sin_family = PF_INET; // Использовать IPv4-адрес
+	sockAddr.sin_addr.s_addr = inet_addr ("127.0.0.1"); // Определенный IP-адрес (в вузе 0.0.0.0)
+	sockAddr.sin_port = htons (502); // Порт
+    bind(servSock, (SOCKADDR*)&sockAddr, sizeof(SOCKADDR));
+     // Входим в состояние мониторинга
+    listen(servSock, 20);
+
+ // Получение клиентского запроса
+    SOCKADDR clntAddr;
+    int nSize;
+    SOCKET clntSock;
+
+    (void)argc;
+    (void)argv;
+
+
+	int res;
+	unsigned char buf[255];
+	#define MAX_STR 255
+
+	hid_device *handle;
+	int i;
+
+    union_type diod_color;
+
+
+
+    if (all_hid_info()==-1) return -1;
+
 	// Set up the command buffer.
 	memset(buf,0x00,sizeof(buf));
 	buf[0] = 0x01;
@@ -116,35 +156,7 @@ int main(int argc, char* argv[])
  		return 1;
 	}
 
-
-	// Read the Manufacturer String
-	wstr[0] = 0x0000;
-	res = hid_get_manufacturer_string(handle, wstr, MAX_STR);
-	if (res < 0)
-		printf("Unable to read manufacturer string\n");
-	printf("Manufacturer String: %ls\n", wstr);
-
-	// Read the Product String
-	wstr[0] = 0x0000;
-	res = hid_get_product_string(handle, wstr, MAX_STR);
-	if (res < 0)
-		printf("Unable to read product string\n");
-	printf("Product String: %ls\n", wstr);
-
-	// Read the Serial Number String
-	wstr[0] = 0x0000;
-	res = hid_get_serial_number_string(handle, wstr, MAX_STR);
-	if (res < 0)
-		printf("Unable to read serial number string\n");
-	printf("Serial Number String: (%d) %ls", wstr[0], wstr);
-	printf("\n");
-
-	// Read Indexed String 1
-	wstr[0] = 0x0000;
-	res = hid_get_indexed_string(handle, 1, wstr, MAX_STR);
-	if (res < 0)
-		printf("Unable to read indexed string 1\n");
-	printf("Indexed String 1: %ls\n", wstr);
+    open_hid_info(handle, &res);
 
 
 
@@ -182,6 +194,7 @@ int main(int argc, char* argv[])
 			printf("%02hhx ", buf[i]);
 		printf("\n");
 	}
+
 
     while(1){
         nSize = sizeof(SOCKADDR);
