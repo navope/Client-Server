@@ -1,0 +1,34 @@
+# depslib dependency file v1.0
+1647203376 source:c:\hid\wsockclient\main.cpp
+	<stdio.h>
+	<stdlib.h>
+	<WinSock2.h>
+
+1652807915 source:d:\sockets\wsockclient\main.cpp
+	<stdio.h>
+	<stdlib.h>
+	<iostream>
+	<WinSock2.h>
+	<clocale>
+
+1649345898 source:c:\users\vadim\desktop\wsockclient\main.cpp
+	<stdio.h>
+	<stdlib.h>
+	<WinSock2.h>
+
+1651955781 source:d:\sockets\sockets\wsockclient\main.cpp
+	<stdio.h>
+	<stdlib.h>
+	<iostream>
+	<WinSock2.h>
+	<clocale>
+	<string>
+
+1652808876 source:d:\kursach\wsockclient\main.cpp
+	<stdio.h>
+	<stdlib.h>
+	<iostream>
+	<WinSock2.h>
+	<clocale>
+	<limits>
+
