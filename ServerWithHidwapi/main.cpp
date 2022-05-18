@@ -14,7 +14,7 @@
 #include <wchar.h>
 #include <winsock2.h>
 #pragma comment (lib, "ws2_32.lib")
-
+//курсач
 struct modbus{
     unsigned short transaction_id=0,protocol_id =0, length;
     unsigned char unit_id=0;
