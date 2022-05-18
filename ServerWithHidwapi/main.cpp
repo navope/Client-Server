@@ -201,9 +201,6 @@ int main(int argc, char* argv[])
         clntSock = accept(servSock, (SOCKADDR*)&clntAddr, &nSize);
         recv(clntSock, bytes, sizeof(modbus), NULL);
         memcpy(&package, bytes, sizeof(modbus));
-        buf[1] = 0x00;
-		buf[0] = 0x01;
-		hid_get_feature_report(handle,buf,2);
 		switch (package.function_code)
         {
             case 65:
@@ -285,10 +282,6 @@ void MeasureVoltageAndChangeRGB(hid_device *handle, unsigned char *buf, union_ty
 	rez = diod_color->elem10; //приводим к инту для вывода в консоль
 	package->data[0] = diod_color->elem16[0];
 	package->data[1] = diod_color->elem16[1];
-	//package->data[0] = rez;
-	//memccpy(package->data, rez);
-	//Sleep(200);
-	//printf("%d \n",res);
 	for (int i=0; i++;i<3)
 	{
 		buf[1+i*2] = diod_color->elem16[0];
