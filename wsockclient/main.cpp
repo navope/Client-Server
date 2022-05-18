@@ -12,7 +12,12 @@ struct modbus{
 unsigned short transaction_id=0,protocol_id =0, length;
 unsigned char unit_id=0;
 unsigned char function_code;
-char data[MAXBYTE-8];
+char data[MAXBYTE-8] = "";
+};
+union union_type
+{
+unsigned char elem16[2];
+uint16_t elem10;
 };
 
 void SendingModbusPackets(char * mas ,modbus * package,SOCKET sock);
@@ -31,7 +36,7 @@ return sock;
 
 
 int main(){
-    int voltage = 0;
+    union_type voltage;
     using namespace std;
     setlocale(LC_ALL, "rus");
     modbus package;
@@ -51,9 +56,8 @@ int main(){
         case 1:
             {
                 package.function_code = 65;//код функции
-                strcpy(package.data,"5");// вводим наш пинг
                 SendingModbusPackets(bytes, &package, sock);
-                if (strcmp(package.data, "5"))
+                if (strcmp(package.data, ""))
                     printf("Message from server: %s\n", package.data);
                     else
                     printf("Server is not working\n");
@@ -64,7 +68,10 @@ int main(){
             {
                 package.function_code = 66;//код функции
                 SendingModbusPackets(bytes, &package, sock);
-                printf("Message from server: %s\n", package.data);// Выводим полученные данные
+                if (strcmp(package.data, ""))
+                    printf("Message from server: %s\n", package.data);
+                    else
+                    printf("Server is not working\n");
                 closesocket(sock);// Закрываем сокет
             }
         break;
@@ -72,6 +79,10 @@ int main(){
             {
                 package.function_code = 67;//код функции
                 SendingModbusPackets(bytes, &package, sock);
+                if (strcmp(package.data, ""))
+                    printf("Message from server: %s\n", package.data);
+                    else
+                    printf("Server is not working\n");
                 closesocket(sock);// Закрываем сокет
             }
         break;
@@ -79,7 +90,13 @@ int main(){
             {
                 package.function_code = 68;//код функции
                 SendingModbusPackets(bytes, &package, sock);
-                printf("Message from server: %d\n", package.data);// Выводим полученные данные
+                //if (strcmp(package.data, ""))
+                    //printf("Message from server: %d\n", package.data);
+                    //else
+                    //printf("Server is not working\n");
+                   memcpy(voltage.elem16,package.data,2);
+                   int rez = voltage.elem10;
+                    printf("Message from server: %d\n", rez);
                 closesocket(sock);// Закрываем сокет
             }
         break;

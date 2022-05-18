@@ -19,13 +19,13 @@ struct modbus{
     unsigned short transaction_id=0,protocol_id =0, length;
     unsigned char unit_id=0;
     unsigned char function_code;
-    char data[MAXBYTE-8];
+    char data[MAXBYTE-8] = "";
     };
 union union_type
-    {
-    unsigned char elem16[2];
-    uint16_t elem10;
-    };
+{
+unsigned char elem16[2];
+uint16_t elem10;
+};
 void MakeMaximumBrightness(hid_device *handle, unsigned char *buf , modbus* package , char * mas);
 void MakeMinimumBrightness(hid_device *handle, unsigned char *buf , modbus* package , char * mas);
 void PaintOverTheScreen(hid_device *handle, unsigned char *buf , modbus* package , char * mas);
@@ -246,6 +246,7 @@ void MakeMaximumBrightness(hid_device *handle, unsigned char *buf , modbus* pack
 	for (int i=1; i<7;i++)
 	buf[i] = 0xff;
 	hid_send_feature_report(handle,buf,7);
+	strcpy(package->data, "Установленна максимальная яркость");
 	memcpy(mas, package, sizeof(modbus));//кодируем
 }
 void MakeMinimumBrightness(hid_device *handle, unsigned char *buf , modbus* package , char * mas)
@@ -254,6 +255,7 @@ void MakeMinimumBrightness(hid_device *handle, unsigned char *buf , modbus* pack
 	for (int i=1; i<7;i++)
 	buf[i] = 0x00;
 	hid_send_feature_report(handle,buf,7);
+	strcpy(package->data, "Установленна маинимальная яркость");
 	memcpy(mas, package, sizeof(modbus));//кодируем
 }
 void PaintOverTheScreen(hid_device *handle, unsigned char *buf , modbus* package , char * mas)
@@ -270,6 +272,7 @@ void PaintOverTheScreen(hid_device *handle, unsigned char *buf , modbus* package
 					}
                 if (color) color = 0;
                     else color = 1;
+		strcpy(package->data, "Экран устройства закрашен");
 		memcpy(mas, package, sizeof(modbus));//кодируем
 	}
 
@@ -282,6 +285,7 @@ void MeasureVoltageAndChangeRGB(hid_device *handle, unsigned char *buf, union_ty
 	rez = diod_color->elem10; //приводим к инту для вывода в консоль
 	package->data[0] = diod_color->elem16[0];
 	package->data[1] = diod_color->elem16[1];
+	//package->data[0] = rez;
 	//memccpy(package->data, rez);
 	//Sleep(200);
 	//printf("%d \n",res);
