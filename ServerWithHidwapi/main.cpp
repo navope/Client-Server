@@ -26,10 +26,10 @@ union union_type
     unsigned char elem16[2];
     uint16_t elem10;
     };
-void MakeMaximumBrightness(hid_device *handle, unsigned char *buf);
-void MakeMinimumBrightness(hid_device *handle, unsigned char *buf);
-void PaintOverTheScreen(hid_device *handle, unsigned char *buf);
-void MeasureVoltageAndChangeRGB(hid_device *handle, unsigned char *buf, union_type * diod_color, int res, modbus* package , char bytes[]);
+void MakeMaximumBrightness(hid_device *handle, unsigned char *buf , modbus* package , char * mas);
+void MakeMinimumBrightness(hid_device *handle, unsigned char *buf , modbus* package , char * mas);
+void PaintOverTheScreen(hid_device *handle, unsigned char *buf , modbus* package , char * mas);
+void MeasureVoltageAndChangeRGB(hid_device *handle, unsigned char *buf, union_type * diod_color, int res, modbus* package , char * mas);
 
 int main(int argc, char* argv[])
 {
@@ -195,17 +195,17 @@ int main(int argc, char* argv[])
         {
             case 65:
                 {
-                   MakeMaximumBrightness(handle, buf);
+                   MakeMaximumBrightness(handle, buf, &package, bytes);
                 }
             break;
             case 66:
                 {
-                    MakeMinimumBrightness(handle, buf);
+                    MakeMinimumBrightness(handle, buf, &package, bytes);
                 }
             break;
             case 67:
                 {
-                    PaintOverTheScreen(handle, buf);
+                    PaintOverTheScreen(handle, buf, &package, bytes);
                 }
             break;
             case 68:
@@ -227,23 +227,23 @@ int main(int argc, char* argv[])
     return 0;
 }
 
-void MakeMaximumBrightness(hid_device *handle, unsigned char *buf)
+void MakeMaximumBrightness(hid_device *handle, unsigned char *buf , modbus* package , char * mas)
 {
 	buf[0] = 0x02;
 	for (int i=1; i<7;i++)
 	buf[i] = 0xff;
 	hid_send_feature_report(handle,buf,7);
-	//memcpy(bytes, &package, sizeof(modbus));//кодируем
+	memcpy(mas, package, sizeof(modbus));//кодируем
 }
-void MakeMinimumBrightness(hid_device *handle, unsigned char *buf)
+void MakeMinimumBrightness(hid_device *handle, unsigned char *buf , modbus* package , char * mas)
 {
 	buf[0] = 0x02;
 	for (int i=1; i<7;i++)
 	buf[i] = 0x00;
 	hid_send_feature_report(handle,buf,7);
-	//memcpy(bytes, &package, sizeof(modbus));//кодируем
+	memcpy(mas, package, sizeof(modbus));//кодируем
 }
-void PaintOverTheScreen(hid_device *handle, unsigned char *buf)
+void PaintOverTheScreen(hid_device *handle, unsigned char *buf , modbus* package , char * mas)
 	{
 		static int color = 1;
 		buf[0] = 0x04;
@@ -257,16 +257,19 @@ void PaintOverTheScreen(hid_device *handle, unsigned char *buf)
 					}
                 if (color) color = 0;
                     else color = 1;
-		//memcpy(bytes, &package, sizeof(modbus));//кодируем
+		memcpy(mas, package, sizeof(modbus));//кодируем
 	}
 
-void MeasureVoltageAndChangeRGB(hid_device *handle, unsigned char *buf, union_type * diod_color, int res, modbus* package, char bytes[])
+void MeasureVoltageAndChangeRGB(hid_device *handle, unsigned char *buf, union_type * diod_color, int res, modbus* package, char * mas)
 {
+	int rez = 0;
 	buf[0] = 0x03;
 	hid_get_feature_report(handle,buf,7); //измеряем напряжение
 	memcpy(diod_color,&buf[1],2); // копируем данные
-	res = diod_color->elem10; //приводим к инту для вывода в консоль
-	package->data[MAXBYTE-8] = res;
+	rez = diod_color->elem10; //приводим к инту для вывода в консоль
+	package->data[0] = diod_color->elem16[0];
+	package->data[1] = diod_color->elem16[1];
+	//memccpy(package->data, rez);
 	//Sleep(200);
 	//printf("%d \n",res);
 	for (int i=0; i++;i<3)
@@ -276,5 +279,5 @@ void MeasureVoltageAndChangeRGB(hid_device *handle, unsigned char *buf, union_ty
 	}
 	buf[0] = 0x02;
 	hid_send_feature_report(handle,buf,7); // меняем RGB
-	memcpy(bytes, &package, sizeof(modbus));//кодируем
+	memcpy(mas, package, sizeof(modbus));//кодируем
 }
