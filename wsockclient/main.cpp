@@ -57,47 +57,30 @@ int main(){
                     printf("Message from server: %s\n", package.data);
                     else
                     printf("Server is not working\n");
-                //system("pause");
-                //system ("cls");
-                // Закрываем сокет
-                closesocket(sock);
+                closesocket(sock);// Закрываем сокет
             }
         break;
         case 2:
             {
                 package.function_code = 66;//код функции
                 SendingModbusPackets(bytes, &package, sock);
-                // Выводим полученные данные
-                printf("Message from server: %s\n", package.data);
-               // system("pause");
-                //system ("cls");
-                // Закрываем сокет
-                closesocket(sock);
+                printf("Message from server: %s\n", package.data);// Выводим полученные данные
+                closesocket(sock);// Закрываем сокет
             }
         break;
         case 3:
             {
                 package.function_code = 67;//код функции
                 SendingModbusPackets(bytes, &package, sock);
-                // Выводим полученные данные
-                printf("Message from server: %s\n", package.data);
-                //system("pause");
-                //system ("cls");
-                // Закрываем сокет
-                closesocket(sock);
+                closesocket(sock);// Закрываем сокет
             }
         break;
         case 4:
             {
                 package.function_code = 68;//код функции
                 SendingModbusPackets(bytes, &package, sock);
-                // Выводим полученные данные
-
-                printf("Message from server: %s\n", package.data);
-                //system("pause");
-                //system ("cls");
-                // Закрываем сокет
-                closesocket(sock);
+                printf("Message from server: %d\n", package.data);// Выводим полученные данные
+                closesocket(sock);// Закрываем сокет
             }
         break;
         }
