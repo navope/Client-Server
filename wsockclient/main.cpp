@@ -5,6 +5,9 @@
 #include <clocale>
 #include <limits>
 
+
+//hello semen
+
 struct modbus{
 unsigned short transaction_id=0,protocol_id =0, length;
 unsigned char unit_id=0;
