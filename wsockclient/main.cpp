@@ -96,13 +96,13 @@ int main(){
         break;
         case 4:
             {
+
                 package.function_code = 68;//код функции
                 SendingModbusPackets(bytes, &package, sock);
                 if (strcmp(package.data, ""))
                     {
-                       memcpy(voltage.elem16,package.data,2);
-                       int rez = voltage.elem10;
-                       printf("Message from server: %d\n", rez);
+
+                       printf("Message from server: %s\n", package.data);
                     }
                     else
                     printf("Server is not working\n");

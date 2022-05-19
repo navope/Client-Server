@@ -195,8 +195,9 @@ void MeasureVoltageAndChangeRGB(hid_device *handle, unsigned char *buf, union_ty
 {
 	int rez = 0;
 	buf[0] = 0x03;
-	hid_get_feature_report(handle,buf,7); //измеряем напряжение
 	buf[1]=buf[2]=buf[3]=buf[4]=buf[5]=buf[6] = buf[7] = 0;
+	hid_get_feature_report(handle,buf,7); //измеряем напряжение
+
 	memcpy(diod_color,&buf[1],2); // копируем данные
 	rez = diod_color->elem10; //приводим к инту для вывода в консоль
 	package->data[0] = diod_color->elem16[0];
@@ -207,6 +208,8 @@ void MeasureVoltageAndChangeRGB(hid_device *handle, unsigned char *buf, union_ty
 		buf[2+i*2] = diod_color->elem16[1];
 	}
 	buf[0] = 0x02;
+	itoa(rez, package->data,10);
+
 	hid_send_feature_report(handle,buf,7); // меняем RGB
 	memcpy(mas, package, sizeof(modbus));//кодируем
 }
