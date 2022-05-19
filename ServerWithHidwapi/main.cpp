@@ -185,8 +185,8 @@ void PaintOverTheScreen(hid_device *handle, unsigned char *buf , modbus* package
 					}
                 if (color) color = 0;
                     else color = 1;
-		strcpy(package->data, "Экран устройства закрашен");
-		memcpy(mas, &package, sizeof(modbus));//кодируем
+		strcpy(package->data, "Экран закрашен");
+		memcpy(mas, package, sizeof(modbus));//кодируем
 }
 
 
