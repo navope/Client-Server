@@ -4,7 +4,7 @@
 #include <WinSock2.h>
 #include <clocale>
 #include <limits>
-
+// пофиксить зарашивание (возможно нет ошибки) и на клиенте case 4
 
 struct modbus{
 unsigned short transaction_id=0,protocol_id =0, length;
