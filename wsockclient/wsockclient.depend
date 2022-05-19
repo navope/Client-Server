@@ -32,3 +32,11 @@
 	<clocale>
 	<limits>
 
+1652976635 source:c:\users\milos\desktop\coursework\wsockclient\main.cpp
+	<stdio.h>
+	<stdlib.h>
+	<iostream>
+	<WinSock2.h>
+	<clocale>
+	<limits>
+
