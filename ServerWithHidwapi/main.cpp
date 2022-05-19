@@ -153,7 +153,7 @@ void MakeMinimumBrightness(hid_device *handle, unsigned char *buf , modbus* pack
 	for (int i=1; i<7;i++)
 		buf[i] = 0x00;
 	hid_send_feature_report(handle,buf,7);
-	strcpy(package->data, "”становленна маниимальна€ €ркость");
+	strcpy(package->data, "”становленна минимальна€ €ркость");
 	memcpy(mas, package, sizeof(modbus));//кодируем
 }
 
