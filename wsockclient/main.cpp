@@ -48,7 +48,7 @@ int main(){
     unsigned int menu =0;
     do{
     sock=get_socket();
-    printf("1.Сделать яркость диода максимальной \n2.Сделать яркость диода минимальной \n3.Закрасить экран \n4.Измерить напряжение и вывести его в кансоль\n");
+    printf("1.Сделать яркость диода максимальной \n2.Сделать яркость диода минимальной \n3.Закрасить экран \n4.Измерить напряжение и вывести его в кансоль\n5.Выход\n");
     scanf("%d",&menu);
     switch(menu){
         case 1:
@@ -59,6 +59,10 @@ int main(){
                     printf("Message from server: %s\n", package.data);
                     else
                     printf("Server is not working\n");
+                    getchar();
+                    getchar();
+                    system("cls");
+
                 closesocket(sock);// Закрываем сокет
             }
         break;
@@ -70,6 +74,9 @@ int main(){
                     printf("Message from server: %s\n", package.data);
                     else
                     printf("Server is not working\n");
+                    getchar();
+                    getchar();
+                    system("cls");
                 closesocket(sock);// Закрываем сокет
             }
         break;
@@ -81,6 +88,9 @@ int main(){
                     printf("Message from server: %s\n", package.data);
                     else
                     printf("Server is not working\n");
+                    getchar();
+                    getchar();
+                    system("cls");
                 closesocket(sock);// Закрываем сокет
             }
         break;
@@ -96,6 +106,9 @@ int main(){
                     }
                     else
                     printf("Server is not working\n");
+                    getchar();
+                    getchar();
+                    system("cls");
                 closesocket(sock);// Закрываем сокет
             }
         break;
