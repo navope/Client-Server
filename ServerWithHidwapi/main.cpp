@@ -23,8 +23,6 @@ struct modbus{
     char data[MAXBYTE-8] = "";
     };
 
-
-
 union union_type{
     unsigned char elem16[2];
     uint16_t elem10;
@@ -36,8 +34,7 @@ void feature_report(hid_device *handle, int* res,unsigned char *buf);
 void MakeMaximumBrightness(hid_device *handle, unsigned char *buf , modbus* package , char * mas);
 void MakeMinimumBrightness(hid_device *handle, unsigned char *buf , modbus* package , char * mas);
 void PaintOverTheScreen(hid_device *handle, unsigned char *buf , modbus* package , char * mas);
-void MeasureVoltageAndChangeRGB(hid_device *handle, unsigned char *buf, union_type * diod_color, int res, modbus* package , char * mas);
-
+void MeasureVoltageAndChangeRGB(hid_device *handle, unsigned char *buf, union_type * diod_color, modbus* package , char * mas);
 
 int main(int argc, char* argv[])
 {
@@ -124,7 +121,7 @@ int main(int argc, char* argv[])
             break;
             case 68:
                 {
-                    MeasureVoltageAndChangeRGB(handle, buf, &diod_color, res, &package, bytes);
+                    MeasureVoltageAndChangeRGB(handle, buf, &diod_color, &package, bytes);
                 }
             break;
         };
@@ -141,9 +138,6 @@ int main(int argc, char* argv[])
     return 0;
 }
 
-
-
-
 void MakeMaximumBrightness(hid_device *handle, unsigned char *buf , modbus* package , char * mas)
 {
 
@@ -155,9 +149,6 @@ void MakeMaximumBrightness(hid_device *handle, unsigned char *buf , modbus* pack
 	memcpy(mas, package, sizeof(modbus));//кодируем
 }
 
-
-
-
 void MakeMinimumBrightness(hid_device *handle, unsigned char *buf , modbus* package , char * mas)
 {
 
@@ -168,8 +159,6 @@ void MakeMinimumBrightness(hid_device *handle, unsigned char *buf , modbus* pack
 	strcpy(package->data, "Установленна маинимальная яркость");
 	memcpy(mas, package, sizeof(modbus));//кодируем
 }
-
-
 
 void PaintOverTheScreen(hid_device *handle, unsigned char *buf , modbus* package , char * mas)
 	{
@@ -189,9 +178,7 @@ void PaintOverTheScreen(hid_device *handle, unsigned char *buf , modbus* package
 		memcpy(mas, package, sizeof(modbus));//кодируем
 }
 
-
-
-void MeasureVoltageAndChangeRGB(hid_device *handle, unsigned char *buf, union_type * diod_color, int res, modbus* package, char * mas)
+void MeasureVoltageAndChangeRGB(hid_device *handle, unsigned char *buf, union_type * diod_color, modbus* package, char * mas)
 {
 	int rez = 0;
 	buf[0] = 0x03;
@@ -199,7 +186,7 @@ void MeasureVoltageAndChangeRGB(hid_device *handle, unsigned char *buf, union_ty
 	hid_get_feature_report(handle,buf,7); //измеряем напряжение
 
 	memcpy(diod_color,&buf[1],2); // копируем данные
-	rez = diod_color->elem10; //приводим к инту для вывода в консоль
+	rez = diod_color->elem10; //приводим к инту для превращения в строку
 	package->data[0] = diod_color->elem16[0];
 	package->data[1] = diod_color->elem16[1];
 	for (int i=0; i++;i<3)
@@ -207,16 +194,13 @@ void MeasureVoltageAndChangeRGB(hid_device *handle, unsigned char *buf, union_ty
 		buf[1+i*2] = diod_color->elem16[0];
 		buf[2+i*2] = diod_color->elem16[1];
 	}
-	buf[0] = 0x02;
 	itoa(rez, package->data,10);
-
+	buf[0] = 0x02;
 	hid_send_feature_report(handle,buf,7); // меняем RGB
 	memcpy(mas, package, sizeof(modbus));//кодируем
 }
 
 int all_hid_info(){
-
-
 	struct hid_device_info *devs, *cur_dev;
 
 	printf("hidapi test/example tool. Compiled with hidapi version %s, runtime version %s.\n", HID_API_VERSION_STR, hid_version_str());
