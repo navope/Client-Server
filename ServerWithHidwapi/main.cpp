@@ -194,9 +194,9 @@ void PaintOverTheScreen(hid_device *handle, unsigned char *buf , modbus* package
 void MeasureVoltageAndChangeRGB(hid_device *handle, unsigned char *buf, union_type * diod_color, int res, modbus* package, char * mas)
 {
 	int rez = 0;
-
 	buf[0] = 0x03;
 	hid_get_feature_report(handle,buf,7); //измеряем напряжение
+	buf[1]=buf[2]=buf[3]=buf[4]=buf[5]=buf[6] = buf[7] = 0;
 	memcpy(diod_color,&buf[1],2); // копируем данные
 	rez = diod_color->elem10; //приводим к инту для вывода в консоль
 	package->data[0] = diod_color->elem16[0];
