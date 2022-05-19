@@ -196,7 +196,7 @@ void MeasureVoltageAndChangeRGB(hid_device *handle, unsigned char *buf, union_ty
 	hid_send_feature_report(handle,buf,7); // меняем RGB
 	memcpy(mas, package, sizeof(modbus));//кодируем
 }
-
+//выводит информацию о всех устройствах USBHID
 int all_hid_info(){
 	struct hid_device_info *devs, *cur_dev;
 
@@ -228,7 +228,7 @@ int all_hid_info(){
 	hid_free_enumeration(devs);
 
 }
-
+//выводит информацию о подключаемом USB HID
 int open_hid_info(hid_device *handle, int* res){
     if (!handle) {
 		printf("unable to open device\n");
@@ -265,8 +265,11 @@ int open_hid_info(hid_device *handle, int* res){
 	printf("Indexed String 1: %ls\n", wstr);
 	return 0;
 }
+}
 
 
+
+//Отчет о характеристиках
 void feature_report(hid_device *handle, int* res,unsigned char *buf){
     int i;
     *res = hid_send_feature_report(handle,buf,7); // send report, 7 byte
@@ -275,7 +278,7 @@ void feature_report(hid_device *handle, int* res,unsigned char *buf){
         printf("hid_write error.\n");
     }
      // keys
-     // Read a Feature Report from the device
+     // Read a   from the device
 	buf[0] = 0x1;
 	*res = hid_get_feature_report(handle, buf, sizeof(buf));
 	if (*res < 0) {
