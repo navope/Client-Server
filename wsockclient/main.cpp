@@ -13,19 +13,9 @@ unsigned char function_code;
 char data[MAXBYTE-8] = "";
 };
 
+void PrintMassage(modbus * package);
 void SendingModbusPackets(char * mas ,modbus * package,SOCKET sock);
-SOCKET get_socket(){
-// Создаем сокет
-SOCKET sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
-// Инициируем запрос к серверу
-sockaddr_in sockAddr;
-memset (& sockAddr, 0, sizeof (sockAddr)); // Каждый байт заполняется 0
-sockAddr.sin_family = PF_INET;
-sockAddr.sin_addr.s_addr = inet_addr("127.0.0.1"); //127.0.0.1
-sockAddr.sin_port = htons(502);
-connect(sock, (SOCKADDR*)&sockAddr, sizeof(SOCKADDR));
-return sock;
-};
+SOCKET get_socket();
 
 int main(){
     using namespace std;
@@ -41,13 +31,14 @@ int main(){
     unsigned int menu =0;
     do{
     sock=get_socket();
-    printf("1.Сделать яркость диода максимальной \n2.Сделать яркость диода минимальной \n3.Закрасить экран \n4.Измерить напряжение и вывести его в кансоль\n5.Выход\n");
+    printf("1.Сделать яркость диода максимальной \n2.Сделать яркость диода минимальной \n3.Закрасить экран \n4.Измерить напряжение и вывести его в консоль\n5.Выход\n");
     scanf("%d",&menu);
     switch(menu){
         case 1:
             {
                 package.function_code = 65;//код функции
                 SendingModbusPackets(bytes, &package, sock);
+                PrintMassage(&package);
                 closesocket(sock);// Закрываем сокет
             }
         break;
@@ -55,6 +46,7 @@ int main(){
             {
                 package.function_code = 66;//код функции
                 SendingModbusPackets(bytes, &package, sock);
+                PrintMassage(&package);
                 closesocket(sock);// Закрываем сокет
             }
         break;
@@ -62,6 +54,7 @@ int main(){
             {
                 package.function_code = 67;//код функции
                 SendingModbusPackets(bytes, &package, sock);
+                PrintMassage(&package);
                 closesocket(sock);// Закрываем сокет
             }
         break;
@@ -70,6 +63,7 @@ int main(){
 
                 package.function_code = 68;//код функции
                 SendingModbusPackets(bytes, &package, sock);
+                PrintMassage(&package);
                 closesocket(sock);// Закрываем сокет
             }
         break;
@@ -90,7 +84,11 @@ void SendingModbusPackets(char * mas ,modbus * package,SOCKET sock)
         // Получение данных, возвращаемых сервером
         recv(sock, mas, sizeof(modbus), NULL);// приняли с сервера
         memcpy(package, mas, sizeof(modbus));// декодировали в структуру
-        if (strcmp(package->data, ""))
+}
+
+void PrintMassage(modbus * package)
+{
+    if (strcmp(package->data, ""))
             printf("Message from server: %s\n", package->data);
         else
             printf("Server is not working\n");
@@ -98,3 +96,16 @@ void SendingModbusPackets(char * mas ,modbus * package,SOCKET sock)
             getchar();
             system("cls");
 }
+
+SOCKET get_socket(){
+// Создаем сокет
+SOCKET sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
+// Инициируем запрос к серверу
+sockaddr_in sockAddr;
+memset (& sockAddr, 0, sizeof (sockAddr)); // Каждый байт заполняется 0
+sockAddr.sin_family = PF_INET;
+sockAddr.sin_addr.s_addr = inet_addr("127.0.0.1"); //127.0.0.1
+sockAddr.sin_port = htons(502);
+connect(sock, (SOCKADDR*)&sockAddr, sizeof(SOCKADDR));
+return sock;
+};

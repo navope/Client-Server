@@ -61,7 +61,6 @@ int main(int argc, char* argv[])
     // Входим в состояние мониторинга
     listen(servSock, 20);
 
-    // Получение клиентского запроса
     SOCKADDR clntAddr;
 
     SOCKET clntSock;
@@ -81,7 +80,6 @@ int main(int argc, char* argv[])
 	buf[1] = 0x81;
 
 	// Open the device using the VID, PID, and optionally the Serial number.
-
 	handle = hid_open(0x1234, 0x0001, NULL);
 
     if (open_hid_info(handle, &res)==1) return 1;
@@ -100,7 +98,7 @@ int main(int argc, char* argv[])
     while(1){
         nSize = sizeof(SOCKADDR);
         clntSock = accept(servSock, (SOCKADDR*)&clntAddr, &nSize);
-        recv(clntSock, bytes, sizeof(modbus), NULL);
+        recv(clntSock, bytes, sizeof(modbus), NULL);// Получение клиентского запроса
         memcpy(&package, bytes, sizeof(modbus));
 		switch (package.function_code)
         {
@@ -151,12 +149,11 @@ void MakeMaximumBrightness(hid_device *handle, unsigned char *buf , modbus* pack
 
 void MakeMinimumBrightness(hid_device *handle, unsigned char *buf , modbus* package , char * mas)
 {
-
 	buf[0] = 0x02;
 	for (int i=1; i<7;i++)
 		buf[i] = 0x00;
 	hid_send_feature_report(handle,buf,7);
-	strcpy(package->data, "Установленна маинимальная яркость");
+	strcpy(package->data, "Установленна маниимальная яркость");
 	memcpy(mas, package, sizeof(modbus));//кодируем
 }
 
